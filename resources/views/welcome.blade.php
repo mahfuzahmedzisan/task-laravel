@@ -27,7 +27,7 @@
                     @if (Route::has('login'))
                         <nav class="flex justify-center items-center space-x-4">
                             @auth('web')
-                                <a href="{{ url('/dashboard') }}"
+                                <a href="{{ url('/home') }}"
                                     class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white border border-black dark:border-white">
                                     Dashboard
                                 </a>
@@ -59,6 +59,10 @@
                         </nav>
                     @endif
                 </header>
+
+                <main>
+                    <a href="{{route('customer.products.index')}}">Product</a>
+                </main>
 
                 <footer class="py-16 text-center text-sm text-black dark:text-white/70">
                     Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
