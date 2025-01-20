@@ -11,8 +11,8 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Styles / Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
 </head>
 
 <body class="font-sans antialiased dark:bg-black dark:text-white/50">
@@ -25,9 +25,9 @@
                 <header>
 
                     @if (Route::has('login'))
-                        <nav class="flex items-center justify-center space-x-4 py-8">
-                            @auth
-                                <a href="{{ url('/dashboard') }}"
+                        <nav class="flex justify-center items-center space-x-4">
+                            @auth('web')
+                                <a href="{{ url('/home') }}"
                                     class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white border border-black dark:border-white">
                                     Dashboard
                                 </a>
@@ -44,9 +44,25 @@
                                     </a>
                                 @endif
                             @endauth
+                            @auth('admin')
+                                <a href="{{ url('admin/dashboard') }}"
+                                    class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white border border-black dark:border-white">
+                                    Admin Dashboard
+                                </a>
+                            @else
+                                <a href="{{ route('admin.login') }}"
+                                    class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white border border-black dark:border-white">
+                                    Admin Login
+                                </a>
+                            @endauth
+
                         </nav>
                     @endif
                 </header>
+
+                <main>
+                    <a href="{{route('customer.products.index')}}">Product</a>
+                </main>
 
                 <footer class="py-16 text-center text-sm text-black dark:text-white/70">
                     Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
