@@ -59,10 +59,10 @@
                             </li>
                         @else
                             <li class="nav-item">
-                                <a href="{{ route('customer.products.index') }}" class="nav-link">{{ __('Cart') }}</a>
+                                <a href="{{ route('customer.cart.view') }}" class="nav-link">{{ __('Cart') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('customer.products.index') }}" class="nav-link">{{ __('Orders') }}</a>
+                                <a href="{{ route('customer.order.index') }}" class="nav-link">{{ __('Orders') }}</a>
                             </li>
 
                             <li class="nav-item dropdown">
