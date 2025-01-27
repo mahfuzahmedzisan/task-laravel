@@ -58,9 +58,39 @@
                                 <a class="nav-link" href="{{ route('admin.login') }}">{{ __('Admin Login') }}</a>
                             </li>
                         @else
-                            <li class="nav-item">
-                                <a href="{{ route('customer.cart.view') }}" class="nav-link">{{ __('Cart') }}</a>
-                            </li>
+                            @if (isset($cart))
+                                @if ($cart->products->isEmpty())
+                                    <li class="nav-item dropdown">
+                                        <a href="{{ route('customer.cart.view') }}"
+                                            class="nav-link">{{ __('Cart') }}</a>
+                                    </li>
+                                @else
+                                    <li class="nav-item dropdown">
+                                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#"
+                                            role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false" v-pre>
+                                            {{ __('Cart') }}
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                            <ul class="list-group">
+                                                @foreach ($cart->products as $product)
+                                                    <li class="dropdown-item">
+                                                        {{ $product->name }}
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                            <a class="dropdown-item"
+                                                href="{{ route('customer.cart.view') }}">{{ __('View Cart') }}</a>
+                                        </div>
+                                    </li>
+                                @endif
+                            @else
+                                <li class="nav-item dropdown">
+                                    <a href="{{ route('customer.cart.view') }}" class="nav-link">{{ __('Cart') }}</a>
+                                </li>
+                            @endif
+
                             <li class="nav-item">
                                 <a href="{{ route('customer.order.index') }}" class="nav-link">{{ __('Orders') }}</a>
                             </li>
@@ -93,6 +123,8 @@
             @yield('content')
         </main>
     </div>
+
+    @stack('js')
 </body>
 
 </html>

@@ -24,7 +24,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->latest()->get();
-        return view('user.components.products_index', compact('products'));
+        return redirect()->route('customer.products.index');
     }
 }

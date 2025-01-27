@@ -15,15 +15,34 @@ class CustomerController extends Controller
     }
 
     // Add a product to the cart
+
     public function addToCart(Request $request)
     {
+        // Validate the request
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+            'product_id' => 'required|exists:products,id',
+        ]);
+
         $product = Product::findOrFail($request->product_id);
         $cart = auth()->user()->cart()->firstOrCreate([]);
 
-        $cart->products()->attach($product->id, ['quantity' => $request->quantity]);
+        // If the product is already in the cart, update its quantity
+        if ($cart->products()->where('product_id', $product->id)->exists()) {
+            $cart->products()->updateExistingPivot($product->id, [
+                'quantity' => $request->quantity
+            ]);
+        } else {
+            // If the product is not in the cart, attach it with the specified quantity
+            $cart->products()->attach($product->id, ['quantity' => $request->quantity]);
+        }
 
-        return redirect()->back()->with('success', 'Product added to cart.');
+        // Return a JSON response for AJAX
+        return response()->json(['success' => true]);
     }
+
+
+
 
     // Remove a product from the cart
     public function removeFromCart(Request $request)
@@ -52,7 +71,8 @@ class CustomerController extends Controller
         return view('user.components.order_details', compact('order'));
     }
 
-    public function orderShow(){
+    public function orderShow()
+    {
         return redirect()->route('customer.order.index');
     }
     // Place an order for the products in the cart
@@ -75,5 +95,35 @@ class CustomerController extends Controller
         $cart->products()->detach();
 
         return redirect()->route('customer.order.index')->with('success', 'Order placed successfully.');
+    }
+
+    public function updateCartQuantity(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+        // Get the user's cart
+        $cart = auth()->user()->cart;
+
+        // Find the product in the cart
+        $product = $cart->products()->where('product_id', $request->product_id)->first();
+
+        if (!$product) {
+            return response()->json(['success' => false, 'message' => 'Product not found in the cart.']);
+        }
+
+        // Update the quantity in the pivot table
+        $cart->products()->updateExistingPivot($request->product_id, ['quantity' => $request->quantity]);
+
+        // Recalculate the total price for the updated product
+        $updatedProduct = Product::find($request->product_id);
+
+        return response()->json([
+            'success' => true,
+            'product_price' => $updatedProduct->price * $request->quantity, // Send the updated price
+        ]);
     }
 }
