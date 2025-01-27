@@ -44,6 +44,12 @@
                         <p>{{ __('Product Management') }}</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('om.orders.index') }}">
+                        <i class="icon-settings"></i>
+                        <p>{{ __('Order Management') }}</p>
+                    </a>
+                </li>
 
             </ul>
         </div>
